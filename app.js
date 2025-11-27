@@ -28,7 +28,8 @@ let state = {
     realizedPL: 0, // Track total realized profit/loss from completed trades
     isMarketPaused: false,
     hasWon: false,
-    events: [] // { type, title, message, timestamp }
+    events: [], // { type, title, message, timestamp }
+    startTime: null
 };
 
 function formatCurrency(amount) {
@@ -160,6 +161,11 @@ function updateStockPrices() {
 
 function startAutomaticPriceUpdates() {
     console.log('🚀 Starting automatic price updates...');
+
+    // Set start time if not already set
+    if (!state.startTime) {
+        state.startTime = Date.now();
+    }
 
     // Update prices every 1 second
     const intervalId = setInterval(() => {
@@ -298,20 +304,20 @@ function startEarningsReportSystem() {
 }
 
 function triggerEarningsReport() {
-    // 50% chance of Good News (Up 50%) or Bad News (Down 50%)
-    const isGoodNews = Math.random() < 0.5;
-    const multiplier = 0.50; // 50% change
+    console.log('📊 EARNINGS REPORT: MIXED RESULTS');
 
-    console.log(`📊 EARNINGS REPORT: ${isGoodNews ? 'POSITIVE' : 'NEGATIVE'}`);
-
-    const title = isGoodNews ? 'EARNINGS BOOM! 🚀' : 'EARNINGS MISS! 📉';
-    const message = isGoodNews ? 'Massive earnings beat! Stocks soar 50%!' : 'Disappointing earnings! Stocks drop 50%!';
-    const type = isGoodNews ? 'success' : 'error';
+    const title = 'EARNINGS REPORTS! 📊';
+    const message = 'Earnings released! Stocks moving wildly ±50%!';
+    const type = 'info';
 
     showToast(title, message, type);
 
     STOCKS.forEach(stock => {
         const stockInfo = state.stockData[stock.symbol];
+        const multiplier = 0.50; // 50% change
+
+        // 50% chance of Good News (Up 50%) or Bad News (Down 50%) for EACH stock
+        const isGoodNews = Math.random() < 0.5;
         const changeAmount = stockInfo.currentPrice * multiplier;
 
         if (isGoodNews) {
@@ -345,9 +351,9 @@ function triggerEarningsReport() {
     }
 
     logEvent(
-        isGoodNews ? 'earnings-good' : 'earnings-bad',
-        isGoodNews ? 'Positive Earnings' : 'Negative Earnings',
-        isGoodNews ? 'Market up 50% on good news!' : 'Market down 50% on bad news!'
+        'earnings-mixed',
+        'Earnings Reports',
+        'Market volatility! Stocks moved ±50% on earnings news.'
     );
 }
 
@@ -601,6 +607,7 @@ function renderEvents() {
         if (event.type === 'buffett') icon = '🐋';
         if (event.type === 'earnings-good') icon = '🚀';
         if (event.type === 'earnings-bad') icon = '🥀';
+        if (event.type === 'earnings-mixed') icon = '📊';
 
         item.innerHTML = `
             <div class="event-time">${event.timestamp}</div>
@@ -846,6 +853,23 @@ function closeModal() {
 function showWinModal() {
     state.hasWon = true;
     state.isMarketPaused = true; // Pause the market
+
+    // Calculate time taken
+    const endTime = Date.now();
+    const timeTaken = endTime - state.startTime;
+    const seconds = Math.floor((timeTaken / 1000) % 60);
+    const minutes = Math.floor((timeTaken / (1000 * 60)) % 60);
+    const hours = Math.floor(timeTaken / (1000 * 60 * 60));
+
+    let timeString = '';
+    if (hours > 0) timeString += `${hours}h `;
+    if (minutes > 0 || hours > 0) timeString += `${minutes}m `;
+    timeString += `${seconds}s`;
+
+    const timeDisplay = document.getElementById('win-time-display');
+    if (timeDisplay) {
+        timeDisplay.textContent = `Time to $1,000,000: ${timeString}`;
+    }
 
     // Update button text if it exists
     const btn = document.getElementById('toggle-market-btn');
