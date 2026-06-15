@@ -1,14 +1,16 @@
-# [StockMarketGame.github.io](https://jethro-chu.github.io/JethroStockMarketGame.github.io/)
-Fun stock market game that uses your emotions to buy and sell stocks! 
-📊 Market Events (Checked every 1 second)
-Event	Probability (per second)	What Happens:
-- Earnings Report	1 in 80 (~1.25%)	Volatility Spike: Each stock individually flips a coin. Heads: +50% price. Tails: -50% price.
-- Market Crash	1 in 80 (~1.25%)	Plummet: All stocks drop by a random amount between 50% and 75%.
-- Warren Buffett Buy	1 in 300 (~0.33%)	Whale Alert: One random stock instantly shoots up by 1000% (11x its current price).
-- Recession	1 in 500 (~0.20%)	Great Depression: Every single stock drops to exactly $1.00.
+# MARKET PULSE TERMINAL
 
-📈 Stock Price Movement (Every 1 second)
-Every second, each stock updates its price independently:
+A Bloomberg-terminal-style stock market game that reads your facial expressions
+through your camera to drive trading.
 
-70% Chance: Price goes UP by $23.
-30% Chance: Price goes DOWN by $23.
+Play it: https://jethro-chu.github.io/JethroStockMarketGame.github.io/
+
+- Smile for a bullish bias, frown for bearish. Optional auto-trade on emotion.
+- Random market events keep the tape moving: earnings spikes, market crashes,
+  Warren Buffett whale pumps, and full recessions.
+- Candlestick chart, watchlist, live portfolio, and a $1,000,000 goal.
+- Everything runs in your browser. The camera feed is processed locally with
+  face-api.js and nothing is recorded or uploaded.
+
+Built with vanilla JS, face-api.js, and Lightweight Charts. The camera and
+expression detection start only after you press START CAMERA.
